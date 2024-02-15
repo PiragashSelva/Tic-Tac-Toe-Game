@@ -1,71 +1,88 @@
+import tkinter as tk
+from tkinter import messagebox
 from art import *
 
-def display_board(board): #function to display the board at the current point in the game
-    print(" " + board[0][0] + " | " + board[0][1] + " | " + board[0][2] + "\n---+---+---")
-    print(" " + board[1][0] + " | " + board[1][1] + " | " + board[1][2] + "\n---+---+---")
-    print(" " + board[2][0] + " | " + board[2][1] + " | " + board[2][2])
 
-def player_input(Player_Symbol, played_moves): #function to get player to enter their move
-    while True:
-        try:
-            move = int(input("Player "+ Player_Symbol +". Enter your move (1-9): "))
-            if 1<=move<=9:
-                if move not in played_moves: #check if move has already been played
-                    played_moves.append(move) # add move to list of moves that have been played
-                    return move 
-                else:
-                    print("This move has already been played. Try again.")
-            else:
-                print("Invalid input. Please enter a number between 1 and 9")
-        except:
-            print("Invalid input. Please enter a number.")
-
-def check_winner(board, player): #if 3 in a row has been achieved, return true and if not, return false
-    for i in range(3): #check horizontal
+def check_winner(board, player):
+    # Function to check if the player has won the game
+    for i in range(3):
         if board[i][0] == board[i][1] == board[i][2] == player:
             return True
-    for j in range(3): #check vertical
+    for j in range(3):
         if board[0][j] == board[1][j] == board[2][j] == player:
             return True
-    if board[0][0] == board[1][1] == board[2][2] == player or board[0][2] == board[1][1] == board[2][0] == player: #check both diagonals
+    if (
+        board[0][0] == board[1][1] == board[2][2] == player
+        or board[0][2] == board[1][1] == board[2][0] == player
+    ):
         return True
     return False
 
 
-def play_tic_tac_toe(): #function to play the game
-    # initialising variables
-    Players = ["X", "O"]
-    Current_player = 0
-    board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+def reset_game():
+    # Function to reset the game
+    global board, played_moves, current_player
+    board = [[" " for column in range(3)] for row in range(3)]
     played_moves = []
-
-    while True:
-        display_board(board)
-        move = player_input(Players[Current_player], played_moves) #obtaining move from player
-
-        ################adding move to board################
-        if move <= 3:
-            board[0][move - 1] = Players[Current_player]
-        elif 4 <= move <= 6:
-            board[1][(move % 3) - 1] = Players[Current_player]
-        else:
-            board[2][(move % 3) - 1] = Players[Current_player]
-        ####################################################
-
-        if check_winner(board, Players[Current_player]) == True: # if a player has achieved 3 in a row 
-            display_board(board) #show the winning board
-            tprint("Player " + Players[Current_player] + " has won!") #announce the winning player
-            break
-        elif len(played_moves) == 9: #if the board is fully populated
-            display_board(board)  # show the drawing board
-            tprint("Draw!")
-            break
-
-        if Current_player == 0: #swapping players for next round
-            Current_player = 1
-        else:
-            Current_player = 0
+    for i in range(3):
+        for j in range(3):
+            buttons[i][j].config(text=" ")
+    current_player = 0
 
 
-if __name__ == "__main__":
-    play_tic_tac_toe()
+def button_click(row, col):
+    # Function to handle button clicks
+    global current_player, played_moves
+
+    if board[row][col] == " ":
+        # Update the board
+        board[row][col] = Players[current_player]
+        buttons[row][col].config(text=Players[current_player])
+
+        # Check for a winner
+        if check_winner(board, Players[current_player]):
+            messagebox.showinfo(
+                "Game Over", "Player " + Players[current_player] + " has won!"
+            )
+            reset_game()
+            return
+
+        # Check for a draw
+        played_moves.append((row, col))
+        if len(played_moves) == 9 and not check_winner(board, Players[current_player]):
+            messagebox.showinfo("Game Over", "It's a draw!")
+            reset_game()
+            return
+
+        # Swapping players for next round
+        current_player = 1 - current_player
+
+
+# Initialize variables
+Players = ["X", "O"]
+current_player = 0
+board = [[" " for column in range(3)] for row in range(3)]
+played_moves = []
+
+# Create the main window
+root = tk.Tk()
+root.title("Tic Tac Toe")
+
+# Create buttons for the game board
+buttons = []
+for i in range(3):
+    row_buttons = []
+    for j in range(3):
+        button = tk.Button(
+            root,
+            text=" ",
+            font=("Helvetica", 24),
+            width=3,
+            height=1,
+            command=lambda row=i, col=j: button_click(row, col),
+        )
+        button.grid(row=i, column=j, padx=5, pady=5)
+        row_buttons.append(button)
+    buttons.append(row_buttons)
+
+root.mainloop()
