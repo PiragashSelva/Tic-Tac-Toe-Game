@@ -52,9 +52,13 @@ def play_tic_tac_toe(): #function to play the game
             board[2][(move % 3) - 1] = Players[Current_player]
         ####################################################
 
-        if check_winner(board, Players[Current_player]) == True: # if a player has 3 in a row 
+        if check_winner(board, Players[Current_player]) == True: # if a player has achieved 3 in a row 
             display_board(board) #show the winning board
             tprint("Player " + Players[Current_player] + " has won!") #announce the winning player
+            break
+        elif len(played_moves) == 9: #if the board is fully populated
+            display_board(board)  # show the drawing board
+            tprint("Draw!")
             break
 
         if Current_player == 0: #swapping players for next round
