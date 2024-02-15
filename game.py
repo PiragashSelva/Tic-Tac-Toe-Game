@@ -1,3 +1,5 @@
+from art import *
+
 def display_board(board): #function to display the board at the current point in the game
     print(" " + board[0][0] + " | " + board[0][1] + " | " + board[0][2] + "\n---+---+---")
     print(" " + board[1][0] + " | " + board[1][1] + " | " + board[1][2] + "\n---+---+---")
@@ -18,6 +20,18 @@ def player_input(Player_Symbol, played_moves): #function to get player to enter 
         except:
             print("Invalid input. Please enter a number.")
 
+def check_winner(board, player): #if 3 in a row has been achieved, return true and if not, return false
+    for i in range(3): #check horizontal
+        if board[i][0] == board[i][1] == board[i][2] == player:
+            return True
+    for j in range(3): #check vertical
+        if board[0][j] == board[1][j] == board[2][j] == player:
+            return True
+    if board[0][0] == board[1][1] == board[2][2] == player or board[0][2] == board[1][1] == board[2][0] == player: #check both diagonals
+        return True
+    return False
+
+
 def play_tic_tac_toe(): #function to play the game
     # initialising variables
     Players = ["X", "O"]
@@ -37,6 +51,11 @@ def play_tic_tac_toe(): #function to play the game
         else:
             board[2][(move % 3) - 1] = Players[Current_player]
         ####################################################
+
+        if check_winner(board, Players[Current_player]) == True: # if a player has 3 in a row 
+            display_board(board) #show the winning board
+            tprint("Player " + Players[Current_player] + " has won!") #announce the winning player
+            break
 
         if Current_player == 0: #swapping players for next round
             Current_player = 1
