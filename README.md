@@ -6,8 +6,9 @@ This is a simple implementation of the classic Tic-Tac-Toe game to be played in 
 
 1. Clone the repository to your local machine.
 2. Navigate to the directory containing the game files.
-3. Run the game by executing the `tic_tac_toe.py` file in your terminal.
-4. During each player's turn, input a number between 1 and 9 corresponding to the position on the game board as shown below:
+3. Activate the virtual environment.
+4. Run the game by executing the `tic_tac_toe.py` file in your terminal.
+5. During each player's turn, input a number between 1 and 9 corresponding to the position on the game board as shown below:
 
 ```
  1 | 2 | 3
