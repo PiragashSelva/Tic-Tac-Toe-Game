@@ -28,6 +28,7 @@ def reset_game():
         for j in range(3):
             buttons[i][j].config(text=" ")
     current_player = 0
+    update_turn_label()  # Update turn label after resetting game
 
 
 def button_click(row, col):
@@ -56,6 +57,12 @@ def button_click(row, col):
 
         # Swapping players for next round
         current_player = 1 - current_player
+        update_turn_label()  # Update turn label after player's move
+
+
+def update_turn_label():
+    # Function to update the turn label with current player's turn
+    turn_label.config(text="Player " + Players[current_player] + "'s turn")
 
 
 # Initialize variables
@@ -70,7 +77,7 @@ root.title("Tic Tac Toe")
 
 # Create canvas for drawing the game board
 canvas = tk.Canvas(root, width=300, height=300)
-canvas.grid(row=0, column=0)
+canvas.grid(row=1, column=0)  # Adjusted to accommodate turn label
 
 # Draw horizontal lines
 for i in range(1, 3):
@@ -86,9 +93,9 @@ for i in range(3):
     row_buttons = []
     for j in range(3):
         x1 = j * 100 + 10
-        y1 = i * 100 + 10
+        y1 = i * 100 + 60
         x2 = (j + 1) * 100 - 10
-        y2 = (i + 1) * 100 - 10
+        y2 = (i + 1) * 100 + 40
         button = tk.Button(
             root,
             text=" ",
@@ -106,5 +113,9 @@ for i in range(3):
         row_buttons.append(button)
         button.place(x=x1, y=y1, width=x2 - x1, height=y2 - y1)
     buttons.append(row_buttons)
+
+# Create turn label
+turn_label = tk.Label(root, text="Player X's turn", font=("Helvetica", 14))
+turn_label.grid(row=0, column=0, pady=10)
 
 root.mainloop()
