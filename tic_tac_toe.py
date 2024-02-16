@@ -68,11 +68,27 @@ played_moves = []
 root = tk.Tk()
 root.title("Tic Tac Toe")
 
+# Create canvas for drawing the game board
+canvas = tk.Canvas(root, width=300, height=300)
+canvas.grid(row=0, column=0)
+
+# Draw horizontal lines
+for i in range(1, 3):
+    canvas.create_line(0, i * 100, 300, i * 100, fill="black", width=3)
+
+# Draw vertical lines
+for i in range(1, 3):
+    canvas.create_line(i * 100, 0, i * 100, 300, fill="black", width=3)
+
 # Create buttons for the game board
 buttons = []
 for i in range(3):
     row_buttons = []
     for j in range(3):
+        x1 = j * 100 + 10
+        y1 = i * 100 + 10
+        x2 = (j + 1) * 100 - 10
+        y2 = (i + 1) * 100 - 10
         button = tk.Button(
             root,
             text=" ",
@@ -80,9 +96,15 @@ for i in range(3):
             width=3,
             height=1,
             command=lambda row=i, col=j: button_click(row, col),
+            borderwidth=0,  # Set border width to 0
+            highlightthickness=0,  # Remove highlight thickness
+            bg=canvas.cget("bg"),  # Set background color to match canvas
+            activebackground=canvas.cget(
+                "bg"
+            ),  # Set active background color to match canvas
         )
-        button.grid(row=i, column=j, padx=5, pady=5)
         row_buttons.append(button)
+        button.place(x=x1, y=y1, width=x2 - x1, height=y2 - y1)
     buttons.append(row_buttons)
 
 root.mainloop()
